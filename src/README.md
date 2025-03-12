@@ -69,7 +69,8 @@ List the pages of your app with brief descriptions. You can show this visually, 
 ### Mockups
 
 Provide visuals of your app's screens. You can use pictures of hand-drawn sketches, or wireframing tools like Figma.
-![capstone visuals mockup](/assets/capstone-mockup.jpg)
+
+![capstone visuals mockup](/src/assets/capstone-mockup.jpg)
 
 ### Data
 
@@ -77,7 +78,7 @@ Describe your data and the relationships between the data points. You can show t
 
 A database should not be required for the intended final product, but is being considered for future implementations
 
-![Balderdash Cards](/assets/example-card.png))
+![Balderdash Cards](/src/assets/example-card.png))
 
 The project is not intended to replace the game cards, but for demonstration purposes, there will be a small sample of cards that users can access within the app.
 Data will be in two tables: cards, and prompts

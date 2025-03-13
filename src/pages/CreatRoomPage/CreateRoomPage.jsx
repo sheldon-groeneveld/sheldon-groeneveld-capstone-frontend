@@ -1,12 +1,28 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function CreateRoomPage() {
   const navigate = useNavigate();
+  const [roomCode, setRoomCode] = useState("");
+
+  const makeRoomCode = () => {
+    const possibleCharacter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let roomCode = "";
+    for (let i = 0; i < 4; i++) {
+      roomCode += possibleCharacter.charAt(Math.random() * 26);
+    }
+    setRoomCode(roomCode);
+  };
+
+  useEffect(() => {
+    makeRoomCode();
+  }, []);
+
   return (
     <main>
       <h1>Room Code</h1>
       <div className="">
-        <p>This is where the generated room code will be displayed</p>
+        <p>{roomCode}</p>
       </div>
 
       <div>

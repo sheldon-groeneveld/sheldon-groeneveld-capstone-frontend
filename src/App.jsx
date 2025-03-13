@@ -1,35 +1,21 @@
-import { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import "./App.css";
-import io from "socket.io-client";
 
-const socket = io.connect("http://localhost:8080");
+import Header from "./components/Header/Header";
+import HomePage from "./pages/HomePage/HomePage";
+import CreateRoomPage from "./pages/CreatRoomPage/CreateRoomPage";
+import JoinRoomPage from "./pages/JoinRoomPage/JoinRoomPage";
 
 function App() {
-  const [message, setMessage] = useState("");
-  const [recievedMessage, setRecievedMessage] = useState("");
-
-  const sendMessage = () => {
-    socket.emit("send_message", { message });
-  };
-
-  useEffect(() => {
-    socket.on("recieve_message", (data) => {
-      setRecievedMessage(data.message);
-    });
-  }, [socket]);
-
   return (
-    <div>
-      <input
-        placeholder="Message..."
-        onChange={(event) => {
-          setMessage(event.target.value);
-        }}
-      />
-      <button onClick={sendMessage}>Send Message</button>
-      <h1>Message: </h1>
-      {recievedMessage}
-    </div>
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/create-room" element={<CreateRoomPage />} />
+        <Route path="/join-room" element={<JoinRoomPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

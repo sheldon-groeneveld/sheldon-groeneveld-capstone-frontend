@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { socket } from "../../socket";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -8,7 +7,6 @@ function HomePage() {
     <div>
       <button
         onClick={() => {
-          socket.connect();
           navigate("/create-room");
         }}
       >
@@ -16,7 +14,6 @@ function HomePage() {
       </button>
       <button
         onClick={() => {
-          socket.connect();
           navigate("/join-room");
         }}
       >

@@ -1,21 +1,19 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import io from "socket.io-client";
 import { socket } from "../../socket";
-
-// const socket = io.connect("http://localhost:8080");
 
 function CreateRoomPage() {
   const navigate = useNavigate();
-  const [roomCode, setRoomCode] = useState("");
+  const [room, setRoom] = useState("");
+  const id = socket.id;
 
   const makeRoomCode = () => {
     const possibleCharacter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let room = "";
+    let roomCode = "";
     for (let i = 0; i < 4; i++) {
-      room += possibleCharacter.charAt(Math.random() * 26);
+      roomCode += possibleCharacter.charAt(Math.random() * 26);
     }
-    setRoomCode(room);
+    setRoom(roomCode);
   };
 
   useEffect(() => {
@@ -23,17 +21,17 @@ function CreateRoomPage() {
   }, []);
 
   useEffect(() => {
-    if (roomCode) {
-      socket.emit("create_room", roomCode);
-      socket.emit("join_room", roomCode);
+    if (room) {
+      socket.emit("create_room", room);
+      socket.emit("join_room", { room, id });
     }
-  }, [roomCode]);
+  }, [room]);
 
   return (
     <main>
       <h1>Room Code</h1>
       <div className="">
-        <p>{roomCode}</p>
+        <p>{room}</p>
       </div>
 
       <div>

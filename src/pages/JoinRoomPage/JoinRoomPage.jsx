@@ -9,9 +9,9 @@ function JoinRoomPage() {
   const id = socket.id;
 
   const joinRoom = () => {
-    if (room.length === 4) {
-      socket.emit("join_room", room);
-      // navigate("/game-page");
+    if (roomExists && room.length === 4) {
+      socket.emit("join_room", { room, id });
+      navigate("/game-page");
     }
   };
 
@@ -33,6 +33,7 @@ function JoinRoomPage() {
       />
       <button onClick={joinRoom}>Join Game</button>
       {!roomExists && room.length === 4 ? <span>Room does not exist</span> : ""}
+      {roomExists && room.length === 4 ? <span>Found Room</span> : ""}
     </div>
   );
 }

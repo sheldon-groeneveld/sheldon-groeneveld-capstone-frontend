@@ -10,6 +10,9 @@ import JoinRoomPage from "./pages/JoinRoomPage/JoinRoomPage";
 import GamePage from "./pages/GamePage/GamePage";
 
 function App() {
+  useEffect(() => {
+    socket.connect();
+  }, []);
   return (
     <BrowserRouter>
       <Header />

@@ -3,22 +3,25 @@ import { useEffect, useState } from "react";
 function GamePage() {
   const [gamePhase, setGamePhase] = useState(0);
   const [answers, setAnswers] = useState(["1", "2", "3", "4", "5", "6", "7"]);
+  const [shuffledAnswers, setShuffledAnswers] = useState([]);
 
   function shuffle(array) {
-    let currentIndex = array.length;
+    let tempArray = array;
+    let currentIndex = tempArray.length;
     while (currentIndex != 0) {
       let randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex],
-        array[currentIndex],
+      [tempArray[currentIndex], tempArray[randomIndex]] = [
+        tempArray[randomIndex],
+        tempArray[currentIndex],
       ];
     }
+    return tempArray;
   }
 
   useEffect(() => {
     if (gamePhase === 1) {
-      shuffle(answers);
+      setShuffledAnswers(shuffle(answers));
     }
   }, [gamePhase]);
 
@@ -36,7 +39,7 @@ function GamePage() {
       body = (
         <div>
           <ul>
-            {answers.map((answer, index) => (
+            {shuffledAnswers.map((answer, index) => (
               <li key={index}>{answer}</li>
             ))}
           </ul>

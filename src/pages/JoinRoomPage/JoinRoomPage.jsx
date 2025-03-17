@@ -13,6 +13,7 @@ function JoinRoomPage() {
       socket.emit("join_room", { room, id });
       navigate("/game-page");
     }
+    return () => socket.off("join_room");
   };
 
   useEffect(() => {
@@ -20,6 +21,10 @@ function JoinRoomPage() {
       socket.emit("check_room", { room, id });
     }
     socket.on("room_verified", (roomExists) => setRoomExists(roomExists));
+    return () => {
+      socket.off("check_room");
+      socket.off("room_verified");
+    };
   }, [room]);
 
   return (

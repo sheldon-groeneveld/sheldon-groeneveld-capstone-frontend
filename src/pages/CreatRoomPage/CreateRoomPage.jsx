@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../../socket";
 
-function CreateRoomPage() {
+function CreateRoomPage({ nickname }) {
   const navigate = useNavigate();
   const [room, setRoom] = useState("");
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(["placeholder"]);
   const id = socket.id;
 
   const makeRoomCode = () => {
@@ -18,9 +18,9 @@ function CreateRoomPage() {
   };
 
   useEffect(() => {
-    socket.on("lobby_list", (id) => {
-      console.log(id);
-      setUsers((users) => [...users, id]);
+    socket.on("lobby_list", (users) => {
+      let nicknames = users.map((user) => user.nickname);
+      setUsers(nicknames);
     });
     return () => {
       socket.off("lobby_list");
@@ -34,7 +34,7 @@ function CreateRoomPage() {
   useEffect(() => {
     if (room) {
       socket.emit("create_room", room);
-      socket.emit("join_room", { room, id });
+      socket.emit("join_room", { room, nickname, id });
     }
     return () => {
       socket.off("create_room");
@@ -44,7 +44,9 @@ function CreateRoomPage() {
 
   return (
     <main>
-      <h1>Room Code</h1>
+      <p>You are: {nickname}</p>
+      <h1>Create Room Page</h1>
+      <h2>Room Code</h2>
       <div className="">
         <p>{room}</p>
       </div>

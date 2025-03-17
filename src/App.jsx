@@ -10,6 +10,8 @@ import JoinRoomPage from "./pages/JoinRoomPage/JoinRoomPage";
 import GamePage from "./pages/GamePage/GamePage";
 
 function App() {
+  const [nickname, setNickname] = useState("");
+
   useEffect(() => {
     socket.connect();
   }, []);
@@ -17,10 +19,16 @@ function App() {
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/create-room" element={<CreateRoomPage />} />
-        <Route path="/join-room" element={<JoinRoomPage />} />
-        <Route path="/game-page" element={<GamePage />} />
+        <Route path="/" element={<HomePage setNickname={setNickname} />} />
+        <Route
+          path="/create-room"
+          element={<CreateRoomPage nickname={nickname} />}
+        />
+        <Route
+          path="/join-room"
+          element={<JoinRoomPage nickname={nickname} />}
+        />
+        <Route path="/game-page" element={<GamePage nickname={nickname} />} />
       </Routes>
     </BrowserRouter>
   );

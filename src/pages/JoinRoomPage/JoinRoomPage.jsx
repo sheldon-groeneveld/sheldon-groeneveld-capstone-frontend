@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../../socket";
 
-function JoinRoomPage() {
+function JoinRoomPage({ nickname }) {
   const navigate = useNavigate();
   const [room, setRoom] = useState("");
   const [roomExists, setRoomExists] = useState(false);
@@ -10,7 +10,7 @@ function JoinRoomPage() {
 
   const joinRoom = () => {
     if (roomExists && room.length === 4) {
-      socket.emit("join_room", { room, id });
+      socket.emit("join_room", { room, nickname, id });
       navigate("/game-page");
     }
     return () => socket.off("join_room");
@@ -18,7 +18,7 @@ function JoinRoomPage() {
 
   useEffect(() => {
     if (room.length === 4) {
-      socket.emit("check_room", { room, id });
+      socket.emit("check_room", room);
     }
     socket.on("room_verified", (roomExists) => setRoomExists(roomExists));
     return () => {
@@ -29,6 +29,7 @@ function JoinRoomPage() {
 
   return (
     <div>
+      <p>You are: {nickname}</p>
       <h1>Join Room Page </h1>
       <input
         type="text"

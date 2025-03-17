@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function GamePage() {
+function GamePage({ nickname }) {
   const [gamePhase, setGamePhase] = useState(0);
   const [answers, setAnswers] = useState(["1", "2", "3", "4", "5", "6", "7"]);
   const [shuffledAnswers, setShuffledAnswers] = useState([]);
@@ -55,6 +55,8 @@ function GamePage() {
   }
   return (
     <main>
+      <p>You are: {nickname}</p>
+      <h1>Game Room</h1>
       {body}
       <button onClick={() => setGamePhase(0)}>Set Game Phase to 0</button>
       <button onClick={() => setGamePhase(1)}>Set Game Phase to 1</button>

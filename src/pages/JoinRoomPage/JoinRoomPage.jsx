@@ -16,7 +16,6 @@ function JoinRoomPage({ nickname }) {
     if (roomExists && room.length === 4) {
       socket.emit("join_room", { room, nickname, id });
       setReady(true);
-      // navigate("/game-page");
     }
     return () => socket.off("join_room");
   };
@@ -37,8 +36,10 @@ function JoinRoomPage({ nickname }) {
       let nicknames = users.map((user) => user.nickname);
       setUsers(nicknames);
     });
+    socket.on("game_start", () => navigate("/game-page"));
     return () => {
       socket.off("lobby_list");
+      socket.off("game_start");
     };
   }, [socket]);
 

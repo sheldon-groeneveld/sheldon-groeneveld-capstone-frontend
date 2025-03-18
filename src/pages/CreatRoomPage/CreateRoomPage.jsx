@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../../socket";
 
+import Lobby from "../../components/Lobby/Lobby";
+
 function CreateRoomPage({ nickname }) {
   const navigate = useNavigate();
   const [room, setRoom] = useState("");
@@ -44,25 +46,13 @@ function CreateRoomPage({ nickname }) {
 
   return (
     <main>
-      <p>You are: {nickname}</p>
       <h1>Create Room Page</h1>
-      <h2>Room Code</h2>
-      <div className="">
-        <p>{room}</p>
-      </div>
-
-      <div>
-        <h2>Players</h2>
-        <ul>
-          {users.map((user, id) => (
-            <li key={id}>{user}</li>
-          ))}
-        </ul>
-      </div>
+      <Lobby room={room} users={users} />
 
       <footer>
         <p>Is everyone in?</p>
-        <button onClick={() => navigate("/:roomId")}>Start Game</button>
+        <button onClick={() => navigate("/game-page")}>Start Game</button>
+        <p>You are: {nickname}</p>
       </footer>
     </main>
   );

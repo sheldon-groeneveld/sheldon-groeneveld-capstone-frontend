@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { socket } from "./socket";
-import "./App.css";
+import "./App.scss";
 
 import Header from "./components/Header/Header";
 import HomePage from "./pages/HomePage/HomePage";
-import CreateRoomPage from "./pages/CreatRoomPage/CreateRoomPage";
+import CreateRoomPage from "./pages/CreateRoomPage/CreateRoomPage";
 import JoinRoomPage from "./pages/JoinRoomPage/JoinRoomPage";
 import GamePage from "./pages/GamePage/GamePage";
 

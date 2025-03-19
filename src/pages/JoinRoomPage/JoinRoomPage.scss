@@ -1,0 +1,13 @@
+.join-page {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  &__header {
+    padding: 8px 0;
+  }
+
+  &__footer {
+    position: fixed;
+    bottom: 16px;
+  }
+}

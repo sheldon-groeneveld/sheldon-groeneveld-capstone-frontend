@@ -1,0 +1,8 @@
+@use "../../styles/partials/variables" as *;
+.site-header {
+  background-color: $tertiary-background;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0;
+}

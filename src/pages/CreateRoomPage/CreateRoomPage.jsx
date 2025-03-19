@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../../socket";
+import "./CreateRoomPage.scss";
 
 import Lobby from "../../components/Lobby/Lobby";
 
@@ -8,7 +9,6 @@ function CreateRoomPage({ nickname }) {
   const navigate = useNavigate();
   const [room, setRoom] = useState("");
   const [users, setUsers] = useState(["placeholder"]);
-  const [test, setTest] = useState(false);
   const id = socket.id;
 
   const makeRoomCode = () => {
@@ -55,13 +55,14 @@ function CreateRoomPage({ nickname }) {
   }, [room]);
 
   return (
-    <main>
-      <h1>Create Room Page</h1>
+    <main className="create-page">
       <Lobby room={room} users={users} />
-
-      <footer>
+      <div>
         <p>Is everyone in?</p>
-        <button onClick={() => startGame(room)}>Start Game</button>
+        <button onClick={() => startGame(room)}>PLAY</button>
+      </div>
+
+      <footer className="create-page__footer">
         <p>You are: {nickname}</p>
       </footer>
     </main>

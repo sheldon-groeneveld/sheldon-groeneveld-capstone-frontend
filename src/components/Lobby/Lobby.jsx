@@ -1,20 +1,24 @@
+import "./Lobby.scss";
+
 function Lobby({ room, users }) {
   return (
-    <section>
-      <h2>Room Code</h2>
-      <div>
-        <p>{room}</p>
+    <article className="lobby">
+      <div className="lobby__container">
+        <h2 className="lobby__header">ROOM CODE</h2>
+        <p className="lobby__copy--contrast">{room}</p>
       </div>
 
-      <div>
-        <h2>Players</h2>
-        <ul>
+      <div className="lobby">
+        <h2 className="lobby__header">PLAYERS</h2>
+        <ul className="lobby__list">
           {users.map((user, id) => (
-            <li key={id}>{user}</li>
+            <li className="lobby__list-item" key={id}>
+              {user}
+            </li>
           ))}
         </ul>
       </div>
-    </section>
+    </article>
   );
 }
 

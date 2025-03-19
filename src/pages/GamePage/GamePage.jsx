@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
+import "./GamePage.scss";
 
 function GamePage({ nickname }) {
   const [gamePhase, setGamePhase] = useState(0);
-  const [answers, setAnswers] = useState(["1", "2", "3", "4", "5", "6", "7"]);
+  const [answers, setAnswers] = useState([
+    "Internation Police Cadets",
+    "Itemized Pho Containers",
+    "Incedintal Proton Collisions",
+    "Idaho Potato Commission",
+    "Ingenious Pets Club",
+    "India Pharmacuticals Charter",
+  ]);
   const [shuffledAnswers, setShuffledAnswers] = useState([]);
 
   function shuffle(array) {
@@ -29,7 +37,7 @@ function GamePage({ nickname }) {
   switch (gamePhase) {
     case 0:
       body = (
-        <div>
+        <div className="game-page__container">
           <input type="text" />
           <button>SUBMIT</button>
         </div>
@@ -37,20 +45,24 @@ function GamePage({ nickname }) {
       break;
     case 1:
       body = (
-        <div>
-          <ul>
+        <div className="game-page__container">
+          <ul className="game-page__list">
             {shuffledAnswers.map((answer, index) => (
-              <li key={index}>{answer}</li>
+              <li className="game-page__list-item" key={index}>
+                {answer}
+              </li>
             ))}
           </ul>
         </div>
       );
       break;
     case 2:
-      body = <div>Phase 2</div>;
+      body = <div className="game-page__container">Phase 2</div>;
       break;
     default:
-      body = <div>Error loading game phase</div>;
+      body = (
+        <div className="game-page__container">Error loading game phase</div>
+      );
       break;
   }
   return (

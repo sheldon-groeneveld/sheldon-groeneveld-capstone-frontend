@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../../socket";
+import "./JoinRoomPage.scss";
 
 import Lobby from "../../components/Lobby/Lobby";
 
@@ -45,9 +46,8 @@ function JoinRoomPage({ nickname }) {
 
   if (!ready) {
     return (
-      <div>
-        <p>You are: {nickname}</p>
-        <h1>Join Room Page </h1>
+      <main className="join-page">
+        <h2 className="join-page__header">ROOM CODE </h2>
         <input
           type="text"
           placeholder="Enter Room Code"
@@ -61,17 +61,21 @@ function JoinRoomPage({ nickname }) {
           ""
         )}
         {roomExists && room.length === 4 ? <span>Found Room</span> : ""}
-      </div>
+
+        <footer className="join-page__footer">
+          <p>You are: {nickname}</p>
+        </footer>
+      </main>
     );
   } else {
     return (
-      <>
+      <main className="join-page">
         <Lobby room={room} users={users} />
         <button onClick={() => navigate("/game-page")}>To game page</button>
-        <footer>
+        <footer className="join-page__footer">
           <p>You are: {nickname}</p>
         </footer>
-      </>
+      </main>
     );
   }
 }

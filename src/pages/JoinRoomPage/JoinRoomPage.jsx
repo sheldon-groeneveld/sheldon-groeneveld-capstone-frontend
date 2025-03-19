@@ -47,20 +47,27 @@ function JoinRoomPage({ nickname }) {
   if (!ready) {
     return (
       <main className="join-page">
-        <h2 className="join-page__header">ROOM CODE </h2>
+        <div className="join-page__container">
+          <h2 className="join-page__header">ROOM CODE </h2>
+          {!roomExists && room.length === 4 ? (
+            <span className="join-page__span">Room does not exist</span>
+          ) : (
+            ""
+          )}
+          {roomExists && room.length === 4 ? (
+            <span className="join-page__span">Found Room</span>
+          ) : (
+            ""
+          )}
+        </div>
         <input
+          className="join-page__input"
           type="text"
           placeholder="Enter Room Code"
           maxLength={4}
-          onChange={(event) => setRoom(event.target.value)}
+          onChange={(event) => setRoom(event.target.value.toUpperCase())}
         />
         <button onClick={joinRoom}>Join Game</button>
-        {!roomExists && room.length === 4 ? (
-          <span>Room does not exist</span>
-        ) : (
-          ""
-        )}
-        {roomExists && room.length === 4 ? <span>Found Room</span> : ""}
 
         <footer className="join-page__footer">
           <p>You are: {nickname}</p>

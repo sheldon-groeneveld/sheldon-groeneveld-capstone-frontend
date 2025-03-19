@@ -8,15 +8,14 @@ function HomePage({ setNickname }) {
 
   return (
     <main className="home-page">
-      {/* <form className="container"> */}
-      <div className="container__label">
-        <label className="container__span" htmlFor="nickname">
+      <div className="home-page__container">
+        <label className="home-page__span" htmlFor="nickname">
           NAME
-        </label>{" "}
-        <p className="container__span">{charLimit}</p>
+        </label>
+        <p className="home-page__span">{charLimit}</p>
       </div>
       <input
-        className="container__input"
+        className="home-page__input"
         id="nickname"
         type="text"
         placeholder="ENTER YOUR NAME"
@@ -26,7 +25,6 @@ function HomePage({ setNickname }) {
           setCharLimit(12 - event.target.value.length);
         }}
       />
-      {/* </form> */}
       <button
         onClick={() => {
           navigate("/create-room");

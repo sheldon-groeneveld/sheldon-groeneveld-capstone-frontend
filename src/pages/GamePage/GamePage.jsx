@@ -4,8 +4,13 @@ import { socket } from "../../socket";
 
 function GamePage({ room, nickname }) {
   const [gamePhase, setGamePhase] = useState(0);
-  const [answer, setAnswer] = useState("");
+  const [payload, setPayload] = useState({
+    author: nickname,
+    answer: "",
+    voters: "",
+  });
   const [answers, setAnswers] = useState([]);
+  const [isActive, setIsActive] = useState();
   const [users, setUsers] = useState(["placeholder"]);
   const sampleAnswers = [
     "Internation Police Cadets",
@@ -17,7 +22,8 @@ function GamePage({ room, nickname }) {
   ];
 
   function handleSubmit() {
-    socket.emit("send_answer", { room, answer });
+    console.log(payload);
+    socket.emit("send_answer", { room, payload });
     setGamePhase(1);
     return () => socket.off("send_answer");
   }
@@ -25,8 +31,15 @@ function GamePage({ room, nickname }) {
   useEffect(() => {
     socket.on("recieve_answer", (answers) => setAnswers(answers));
     socket.on("users_get", (users) => setUsers(users));
-    return () => socket.off("recieve_answer");
+    return () => {
+      socket.off("recieve_answer");
+      socket.off("users_get");
+    };
   }, [socket]);
+
+  useEffect(() => {
+    console.log(answers.map((answer) => answer.answer));
+  }, [answers]);
 
   useEffect(() => {
     socket.emit("get_users", room);
@@ -51,29 +64,41 @@ function GamePage({ room, nickname }) {
 
   let body;
   switch (gamePhase) {
-    case 0:
+    case 0: // submit answers phase
       body = (
         <div className="game-page__container">
           <input
             type="text"
-            onChange={(event) => setAnswer(event.target.value)}
+            onChange={(event) =>
+              setPayload({ ...payload, answer: event.target.value })
+            }
           />
           <button onClick={handleSubmit}>SUBMIT</button>
         </div>
       );
       break;
-    case 1:
+    case 1: // wait for everyone to answer phase
       body = (
         <div className="game-page__container">Waiting for other players...</div>
       );
       break;
-    case 2:
+    case 2: // vote on answers phase
       body = (
         <div className="game-page__container">
           <ul className="game-page__list">
             {answers.map((answer, index) => (
-              <li className="game-page__list-item" key={index}>
-                {answer}
+              <li
+                className={
+                  "game-page__list-item " +
+                  (isActive === answer.answer
+                    ? "game-page__list-item--active"
+                    : "")
+                }
+                id={answer.answer}
+                key={index}
+                onClick={(event) => setIsActive(event.target.id)}
+              >
+                {answer.answer}
               </li>
             ))}
           </ul>

@@ -19,6 +19,12 @@
       padding: 4px 8px;
       width: 100%;
       text-align: center;
+
+      &--active {
+        background-color: $secondary-background;
+        border: 2px solid $primary-border;
+        scale: 1.1;
+      }
     }
     // TODO - set chosen item (answer) to background-color: $secondary-background; and scale up a tad
   }

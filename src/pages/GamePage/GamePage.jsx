@@ -29,6 +29,11 @@ function GamePage({ room, nickname }) {
 
   function handleConfirmVote() {
     socket.emit("send_vote", { room, nickname, vote });
+    setGamePhase(1);
+  }
+
+  function handleReset() {
+    socket.emit("reset_room", { room });
   }
 
   useEffect(() => {
@@ -40,9 +45,15 @@ function GamePage({ room, nickname }) {
       setAnswers(answers);
       setGamePhase(3);
     });
+    socket.on("room_reset", (answers) => {
+      setAnswers(answers);
+      setGamePhase(0);
+    });
     // socket.on("users_get", (users) => setUsers(users));
     return () => {
       socket.off("recieve_answer");
+      socket.off("show_results");
+      socket.off("room_reset");
       // socket.off("users_get");
     };
   }, [socket]);
@@ -110,6 +121,7 @@ function GamePage({ room, nickname }) {
               </li>
             ))}
           </ul>
+          <button onClick={handleConfirmVote}>Confirm</button>
         </div>
       );
       break;
@@ -134,6 +146,7 @@ function GamePage({ room, nickname }) {
               </li>
             ))}
           </ul>
+          <button onClick={handleReset}>Next Round!</button>
         </div>
       );
       break;
@@ -148,7 +161,7 @@ function GamePage({ room, nickname }) {
       <h1>Game Room</h1>
       {body}
       {/* <button onClick={() => setGamePhase(3)}>Confirm</button> */}
-      <button onClick={handleConfirmVote}>Confirm</button>
+
       <button onClick={() => setGamePhase(0)}>Set Game Phase to 0</button>
       <button onClick={() => setGamePhase(1)}>Set Game Phase to 1</button>
       <button onClick={() => setGamePhase(2)}>Set Game Phase to 2</button>

@@ -7,10 +7,10 @@ function GamePage({ room, nickname }) {
   const [payload, setPayload] = useState({
     author: nickname,
     answer: "",
-    voters: "",
+    voters: [],
   });
   const [answers, setAnswers] = useState([]);
-  const [isActive, setIsActive] = useState();
+  const [vote, setVote] = useState();
   const [users, setUsers] = useState(["placeholder"]);
   const sampleAnswers = [
     "Internation Police Cadets",
@@ -22,29 +22,39 @@ function GamePage({ room, nickname }) {
   ];
 
   function handleSubmit() {
-    console.log(payload);
     socket.emit("send_answer", { room, payload });
     setGamePhase(1);
-    return () => socket.off("send_answer");
+    // return () => socket.off("send_answer");
+  }
+
+  function handleConfirmVote() {
+    socket.emit("send_vote", { room, nickname, vote });
   }
 
   useEffect(() => {
-    socket.on("recieve_answer", (answers) => setAnswers(answers));
-    socket.on("users_get", (users) => setUsers(users));
+    socket.on("recieve_answer", (answers) => {
+      setAnswers(answers);
+      setGamePhase(2);
+    });
+    socket.on("show_results", (answers) => {
+      setAnswers(answers);
+      setGamePhase(3);
+    });
+    // socket.on("users_get", (users) => setUsers(users));
     return () => {
       socket.off("recieve_answer");
-      socket.off("users_get");
+      // socket.off("users_get");
     };
   }, [socket]);
 
-  useEffect(() => {
-    console.log(answers.map((answer) => answer.answer));
-  }, [answers]);
+  // useEffect(() => {
+  //   console.log(answers.map((answer) => answer.answer));
+  // }, [answers]);
 
-  useEffect(() => {
-    socket.emit("get_users", room);
-    return () => socket.off("get_users");
-  }, []);
+  // useEffect(() => {
+  //   socket.emit("get_users", room);
+  //   return () => socket.off("get_users");
+  // }, []);
 
   useEffect(() => {
     switch (gamePhase) {
@@ -53,7 +63,7 @@ function GamePage({ room, nickname }) {
       case 1:
         break;
       case 2:
-        socket.emit("request_answers", room);
+        // socket.emit("request_answers", room);
         break;
       case 3:
         break;
@@ -90,15 +100,37 @@ function GamePage({ room, nickname }) {
               <li
                 className={
                   "game-page__list-item " +
-                  (isActive === answer.answer
-                    ? "game-page__list-item--active"
-                    : "")
+                  (vote === answer.answer ? "game-page__list-item--active" : "")
                 }
                 id={answer.answer}
                 key={index}
-                onClick={(event) => setIsActive(event.target.id)}
+                onClick={(event) => setVote(event.target.id)}
               >
                 {answer.answer}
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+      break;
+    case 3: // reveal votes phase
+      body = (
+        <div className="game-page__container">
+          <ul className="game-page__list">
+            {answers.map((answer, index) => (
+              <li
+                className={"game-page__list-item active"}
+                id={answer.answer}
+                key={index}
+              >
+                <div>
+                  <p>{answer.answer}</p>
+                  <div className="game-page__wrapper">
+                    {answer.voters.map((voter) => (
+                      <p className="game-page__wrapper-item">{voter}</p>
+                    ))}
+                  </div>
+                </div>
               </li>
             ))}
           </ul>
@@ -115,6 +147,8 @@ function GamePage({ room, nickname }) {
     <main>
       <h1>Game Room</h1>
       {body}
+      {/* <button onClick={() => setGamePhase(3)}>Confirm</button> */}
+      <button onClick={handleConfirmVote}>Confirm</button>
       <button onClick={() => setGamePhase(0)}>Set Game Phase to 0</button>
       <button onClick={() => setGamePhase(1)}>Set Game Phase to 1</button>
       <button onClick={() => setGamePhase(2)}>Set Game Phase to 2</button>

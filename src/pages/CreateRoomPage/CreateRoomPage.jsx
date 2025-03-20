@@ -26,7 +26,6 @@ function CreateRoomPage({ room, setRoom, nickname }) {
 
   useEffect(() => {
     socket.on("lobby_list", (users) => {
-      console.log(users);
       setUsers(users);
     });
     socket.on("game_start", () => navigate("/game-page"));

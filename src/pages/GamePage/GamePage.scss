@@ -26,11 +26,34 @@
         scale: 1.1;
       }
     }
-    // TODO - set chosen item (answer) to background-color: $secondary-background; and scale up a tad
+  }
+
+  &__wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    column-gap: 20px;
+    row-gap: 12px;
+
+    &-item {
+      background-color: $secondary-light;
+      color: $primary-dark;
+      border: 2px solid $secondary-border;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 20px;
+      flex-basis: 29%;
+      max-width: 112px;
+    }
   }
 
   &__footer {
     position: fixed;
     bottom: 16px;
   }
+}
+
+.active {
+  background-color: $secondary-background;
 }

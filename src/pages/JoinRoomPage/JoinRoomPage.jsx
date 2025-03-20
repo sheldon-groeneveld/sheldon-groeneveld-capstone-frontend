@@ -33,8 +33,7 @@ function JoinRoomPage({ room, setRoom, nickname }) {
 
   useEffect(() => {
     socket.on("lobby_list", (users) => {
-      let nicknames = users.map((user) => user.nickname);
-      setUsers(nicknames);
+      setUsers(users);
     });
     socket.on("game_start", () => navigate("/game-page"));
     return () => {
@@ -50,10 +49,7 @@ function JoinRoomPage({ room, setRoom, nickname }) {
           <h2 className="join-page__header">ROOM CODE </h2>
           {!roomExists && room.length === 4 ? (
             <span className="join-page__span">Room does not exist</span>
-          ) : (
-            ""
-          )}
-          {roomExists && room.length === 4 ? (
+          ) : roomExists && room.length === 4 ? (
             <span className="join-page__span">Found Room</span>
           ) : (
             ""

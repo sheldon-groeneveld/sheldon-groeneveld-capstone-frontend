@@ -8,18 +8,7 @@ import Lobby from "../../components/Lobby/Lobby";
 function CreateRoomPage({ room, setRoom, nickname }) {
   const navigate = useNavigate();
   const [users, setUsers] = useState(["placeholder"]);
-  const mountFlag = useRef(false);
   const id = socket.id;
-
-  const makeRoomCode = () => {
-    const possibleCharacter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let roomCode = "";
-    for (let i = 0; i < 4; i++) {
-      roomCode += possibleCharacter.charAt(Math.random() * 26);
-    }
-    setRoom(roomCode);
-    mountFlag.current = true;
-  };
 
   const startGame = (room) => {
     socket.emit("start_game", room);
@@ -27,11 +16,8 @@ function CreateRoomPage({ room, setRoom, nickname }) {
   };
 
   useEffect(() => {
-    if (!mountFlag.current) {
-      console.log(`mount flag is ${mountFlag.current}, making room`);
-      socket.emit("create_room", room);
-      socket.emit("join_room", { room, nickname, id });
-    }
+    socket.emit("create_room", room);
+    socket.emit("join_room", { room, nickname, id });
     return () => {
       socket.off("create_room");
       socket.off("join_room");

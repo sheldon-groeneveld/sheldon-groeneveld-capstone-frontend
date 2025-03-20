@@ -14,25 +14,11 @@ function GamePage({ room, nickname }) {
     "Ingenious Pets Club",
     "India Pharmacuticals Charter",
   ];
-  const [shuffledAnswers, setShuffledAnswers] = useState([]);
-
-  function shuffle(array) {
-    let tempArray = [...array];
-    let currentIndex = tempArray.length;
-    while (currentIndex != 0) {
-      let randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-      [tempArray[currentIndex], tempArray[randomIndex]] = [
-        tempArray[randomIndex],
-        tempArray[currentIndex],
-      ];
-    }
-    return tempArray;
-  }
 
   function handleSubmit() {
     socket.emit("send_answer", { room, answer });
     setGamePhase(1);
+    return () => socket.off("send_answer");
   }
 
   useEffect(() => {
@@ -55,8 +41,7 @@ function GamePage({ room, nickname }) {
       case 1:
         break;
       case 2:
-        // setShuffledAnswers(shuffle(answers));
-        setShuffledAnswers(shuffle(sampleAnswers));
+        socket.emit("request_answers", room);
         break;
       case 3:
         break;
@@ -87,7 +72,7 @@ function GamePage({ room, nickname }) {
       body = (
         <div className="game-page__container">
           <ul className="game-page__list">
-            {shuffledAnswers.map((answer, index) => (
+            {answers.map((answer, index) => (
               <li className="game-page__list-item" key={index}>
                 {answer}
               </li>

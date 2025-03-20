@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../../socket";
 import "./CreateRoomPage.scss";
 
 import Lobby from "../../components/Lobby/Lobby";
 
-function CreateRoomPage({ nickname }) {
+function CreateRoomPage({ room, setRoom, nickname }) {
   const navigate = useNavigate();
-  const [room, setRoom] = useState("");
   const [users, setUsers] = useState(["placeholder"]);
+  const mountFlag = useRef(false);
   const id = socket.id;
 
   const makeRoomCode = () => {
@@ -18,6 +18,7 @@ function CreateRoomPage({ nickname }) {
       roomCode += possibleCharacter.charAt(Math.random() * 26);
     }
     setRoom(roomCode);
+    mountFlag.current = true;
   };
 
   const startGame = (room) => {
@@ -26,9 +27,21 @@ function CreateRoomPage({ nickname }) {
   };
 
   useEffect(() => {
+    if (!mountFlag.current) {
+      console.log(`mount flag is ${mountFlag.current}, making room`);
+      socket.emit("create_room", room);
+      socket.emit("join_room", { room, nickname, id });
+    }
+    return () => {
+      socket.off("create_room");
+      socket.off("join_room");
+    };
+  }, []);
+
+  useEffect(() => {
     socket.on("lobby_list", (users) => {
-      let nicknames = users.map((user) => user.nickname);
-      setUsers(nicknames);
+      console.log(users);
+      setUsers(users);
     });
     socket.on("game_start", () => {
       navigate("/game-page");
@@ -38,21 +51,6 @@ function CreateRoomPage({ nickname }) {
       socket.off("game_start");
     };
   }, [socket]);
-
-  useEffect(() => {
-    makeRoomCode();
-  }, []);
-
-  useEffect(() => {
-    if (room) {
-      socket.emit("create_room", room);
-      socket.emit("join_room", { room, nickname, id });
-    }
-    return () => {
-      socket.off("create_room");
-      socket.off("join_room");
-    };
-  }, [room]);
 
   return (
     <main className="create-page">

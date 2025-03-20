@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import "./GamePage.scss";
+import { socket } from "../../socket";
 
-function GamePage({ nickname }) {
+function GamePage({ room, nickname }) {
   const [gamePhase, setGamePhase] = useState(0);
-  const [answers, setAnswers] = useState([
+  const [answer, setAnswer] = useState("");
+  const [answers, setAnswers] = useState([]);
+  const sampleAnswers = [
     "Internation Police Cadets",
     "Itemized Pho Containers",
     "Incedintal Proton Collisions",
     "Idaho Potato Commission",
     "Ingenious Pets Club",
     "India Pharmacuticals Charter",
-  ]);
+  ];
   const [shuffledAnswers, setShuffledAnswers] = useState([]);
 
   function shuffle(array) {
@@ -27,9 +30,38 @@ function GamePage({ nickname }) {
     return tempArray;
   }
 
+  function handleSubmit() {
+    socket.emit("send_answer", { room, answer });
+    setGamePhase(1);
+  }
+
   useEffect(() => {
-    if (gamePhase === 1) {
-      setShuffledAnswers(shuffle(answers));
+    socket.on("recieve_answer", (answers) => {
+      console.log(answers);
+      setAnswers(answers);
+    });
+    return () => socket.off("recieve_answer");
+  }, [socket]);
+
+  useEffect(() => {
+    console.log(answers);
+  }, [answers]);
+
+  useEffect(() => {
+    switch (gamePhase) {
+      case 0:
+        setAnswers([]);
+        break;
+      case 1:
+        break;
+      case 2:
+        // setShuffledAnswers(shuffle(answers));
+        setShuffledAnswers(shuffle(sampleAnswers));
+        break;
+      case 3:
+        break;
+      default:
+        break;
     }
   }, [gamePhase]);
 
@@ -38,12 +70,20 @@ function GamePage({ nickname }) {
     case 0:
       body = (
         <div className="game-page__container">
-          <input type="text" />
-          <button>SUBMIT</button>
+          <input
+            type="text"
+            onChange={(event) => setAnswer(event.target.value)}
+          />
+          <button onClick={handleSubmit}>SUBMIT</button>
         </div>
       );
       break;
     case 1:
+      body = (
+        <div className="game-page__container">Waiting for other players...</div>
+      );
+      break;
+    case 2:
       body = (
         <div className="game-page__container">
           <ul className="game-page__list">
@@ -55,9 +95,6 @@ function GamePage({ nickname }) {
           </ul>
         </div>
       );
-      break;
-    case 2:
-      body = <div className="game-page__container">Phase 2</div>;
       break;
     default:
       body = (
@@ -72,6 +109,7 @@ function GamePage({ nickname }) {
       {body}
       <button onClick={() => setGamePhase(0)}>Set Game Phase to 0</button>
       <button onClick={() => setGamePhase(1)}>Set Game Phase to 1</button>
+      <button onClick={() => setGamePhase(2)}>Set Game Phase to 2</button>
     </main>
   );
 }

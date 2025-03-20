@@ -5,9 +5,8 @@ import "./JoinRoomPage.scss";
 
 import Lobby from "../../components/Lobby/Lobby";
 
-function JoinRoomPage({ nickname }) {
+function JoinRoomPage({ room, setRoom, nickname }) {
   const navigate = useNavigate();
-  const [room, setRoom] = useState("");
   const [roomExists, setRoomExists] = useState(false);
   const [users, setUsers] = useState(["placeholder"]);
   const [ready, setReady] = useState(false);

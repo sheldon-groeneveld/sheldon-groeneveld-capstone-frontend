@@ -2,9 +2,19 @@ import { useNavigate } from "react-router-dom";
 import "./HomePage.scss";
 import { useState } from "react";
 
-function HomePage({ setNickname }) {
+function HomePage({ setRoom, setNickname }) {
   const navigate = useNavigate();
   const [charLimit, setCharLimit] = useState(12);
+
+  const makeRoomCode = () => {
+    const possibleCharacter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let roomCode = "";
+    for (let i = 0; i < 4; i++) {
+      roomCode += possibleCharacter.charAt(Math.random() * 26);
+    }
+    setRoom(roomCode);
+    navigate("/create-room");
+  };
 
   return (
     <main className="home-page">
@@ -25,13 +35,7 @@ function HomePage({ setNickname }) {
           setCharLimit(12 - event.target.value.length);
         }}
       />
-      <button
-        onClick={() => {
-          navigate("/create-room");
-        }}
-      >
-        CREATE ROOM
-      </button>
+      <button onClick={makeRoomCode}>CREATE ROOM</button>
       <button
         onClick={() => {
           navigate("/join-room");

@@ -6,6 +6,7 @@ function GamePage({ room, nickname }) {
   const [gamePhase, setGamePhase] = useState(0);
   const [answer, setAnswer] = useState("");
   const [answers, setAnswers] = useState([]);
+  const [users, setUsers] = useState(["placeholder"]);
   const sampleAnswers = [
     "Internation Police Cadets",
     "Itemized Pho Containers",
@@ -22,21 +23,19 @@ function GamePage({ room, nickname }) {
   }
 
   useEffect(() => {
-    socket.on("recieve_answer", (answers) => {
-      console.log(answers);
-      setAnswers(answers);
-    });
+    socket.on("recieve_answer", (answers) => setAnswers(answers));
+    socket.on("users_get", (users) => setUsers(users));
     return () => socket.off("recieve_answer");
   }, [socket]);
 
   useEffect(() => {
-    console.log(answers);
-  }, [answers]);
+    socket.emit("get_users", room);
+    return () => socket.off("get_users");
+  }, []);
 
   useEffect(() => {
     switch (gamePhase) {
       case 0:
-        setAnswers([]);
         break;
       case 1:
         break;
@@ -89,12 +88,14 @@ function GamePage({ room, nickname }) {
   }
   return (
     <main>
-      <p>You are: {nickname}</p>
       <h1>Game Room</h1>
       {body}
       <button onClick={() => setGamePhase(0)}>Set Game Phase to 0</button>
       <button onClick={() => setGamePhase(1)}>Set Game Phase to 1</button>
       <button onClick={() => setGamePhase(2)}>Set Game Phase to 2</button>
+      <footer className="game-page__footer">
+        <p>You are: {nickname}</p>
+      </footer>
     </main>
   );
 }

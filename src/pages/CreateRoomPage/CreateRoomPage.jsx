@@ -29,9 +29,7 @@ function CreateRoomPage({ room, setRoom, nickname }) {
       console.log(users);
       setUsers(users);
     });
-    socket.on("game_start", () => {
-      navigate("/game-page");
-    });
+    socket.on("game_start", () => navigate("/game-page"));
     return () => {
       socket.off("lobby_list");
       socket.off("game_start");

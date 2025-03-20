@@ -22,4 +22,9 @@
     }
     // TODO - set chosen item (answer) to background-color: $secondary-background; and scale up a tad
   }
+
+  &__footer {
+    position: fixed;
+    bottom: 16px;
+  }
 }

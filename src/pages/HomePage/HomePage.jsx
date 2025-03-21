@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import "./HomePage.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function HomePage({ setRoom, setNickname }) {
   const navigate = useNavigate();
@@ -15,6 +15,10 @@ function HomePage({ setRoom, setNickname }) {
     setRoom(roomCode);
     navigate("/create-room");
   };
+
+  useEffect(() => {
+    setRoom("");
+  }, []);
 
   return (
     <main className="home-page">
@@ -31,7 +35,7 @@ function HomePage({ setRoom, setNickname }) {
         placeholder="ENTER YOUR NAME"
         maxLength={12}
         onChange={(event) => {
-          setNickname(event.target.value);
+          setNickname(event.target.value.toUpperCase());
           setCharLimit(12 - event.target.value.length);
         }}
       />

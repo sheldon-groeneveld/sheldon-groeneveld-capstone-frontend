@@ -8,23 +8,26 @@ import Lobby from "../../components/Lobby/Lobby";
 function JoinRoomPage({ room, setRoom, nickname }) {
   const navigate = useNavigate();
   const [roomExists, setRoomExists] = useState(false);
+  const [roomIsOpen, setRoomIsOpen] = useState(true);
   const [users, setUsers] = useState(["Failed to load users..."]);
   const [ready, setReady] = useState(false);
   const id = socket.id;
 
   const joinRoom = () => {
-    if (roomExists && room.length === 4) {
+    if (roomExists && roomIsOpen && room.length === 4) {
       socket.emit("join_room", { room, nickname, id });
       setReady(true);
     }
-    return () => socket.off("join_room");
   };
 
   useEffect(() => {
     if (room.length === 4) {
       socket.emit("check_room", room);
     }
-    socket.on("room_verified", (roomExists) => setRoomExists(roomExists));
+    socket.on("room_verified", ({ roomExists, roomIsOpen }) => {
+      setRoomExists(roomExists);
+      setRoomIsOpen(roomIsOpen);
+    });
     return () => {
       socket.off("room_verified");
     };
@@ -48,6 +51,8 @@ function JoinRoomPage({ room, setRoom, nickname }) {
           <h2 className="join-page__header">ROOM CODE </h2>
           {!roomExists && room.length === 4 ? (
             <span className="join-page__span">Room does not exist</span>
+          ) : roomExists && !roomIsOpen && room.length === 4 ? (
+            <span className="join-page__span">Room Closed</span>
           ) : roomExists && room.length === 4 ? (
             <span className="join-page__span">Found Room</span>
           ) : (

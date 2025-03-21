@@ -73,7 +73,6 @@ function JoinRoomPage({ room, setRoom, nickname }) {
     return (
       <main className="join-page">
         <Lobby room={room} users={users} />
-        <button onClick={() => navigate("/game-page")}>To game page</button>
         <footer className="join-page__footer">
           <p>You are: {nickname}</p>
         </footer>

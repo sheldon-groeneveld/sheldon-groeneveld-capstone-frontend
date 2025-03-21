@@ -121,7 +121,7 @@ function GamePage({ room, nickname }) {
   }
   return (
     <main>
-      <h1>Game Room</h1>
+      <h1>{room}</h1>
       {body}
       <footer className="game-page__footer">
         <p>You are: {nickname}</p>

@@ -8,7 +8,7 @@ import Lobby from "../../components/Lobby/Lobby";
 function JoinRoomPage({ room, setRoom, nickname }) {
   const navigate = useNavigate();
   const [roomExists, setRoomExists] = useState(false);
-  const [users, setUsers] = useState(["placeholder"]);
+  const [users, setUsers] = useState(["Failed to load users..."]);
   const [ready, setReady] = useState(false);
   const id = socket.id;
 
@@ -26,7 +26,6 @@ function JoinRoomPage({ room, setRoom, nickname }) {
     }
     socket.on("room_verified", (roomExists) => setRoomExists(roomExists));
     return () => {
-      socket.off("check_room");
       socket.off("room_verified");
     };
   }, [room]);

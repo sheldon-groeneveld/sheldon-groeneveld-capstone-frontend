@@ -26,9 +26,7 @@ function App() {
         />
         <Route
           path="/create-room"
-          element={
-            <CreateRoomPage room={room} setRoom={setRoom} nickname={nickname} />
-          }
+          element={<CreateRoomPage room={room} nickname={nickname} />}
         />
         <Route
           path="/join-room"

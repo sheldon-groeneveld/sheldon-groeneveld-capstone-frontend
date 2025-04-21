@@ -2,18 +2,23 @@ import { useNavigate } from "react-router-dom";
 import "./HomePage.scss";
 import { useEffect, useState } from "react";
 
-function HomePage({ setRoom, setNickname }) {
+function HomePage({ setRoom, nickname, setNickname }) {
   const navigate = useNavigate();
   const [charLimit, setCharLimit] = useState(12);
+  const [errorState, setErrorState] = useState(false);
 
   const makeRoomCode = () => {
-    const possibleCharacter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let roomCode = "";
-    for (let i = 0; i < 4; i++) {
-      roomCode += possibleCharacter.charAt(Math.random() * 26);
+    if (nickname) {
+      const possibleCharacter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      let roomCode = "";
+      for (let i = 0; i < 4; i++) {
+        roomCode += possibleCharacter.charAt(Math.random() * 26);
+      }
+      setRoom(roomCode);
+      navigate("/create-room");
+    } else {
+      setErrorState(true);
     }
-    setRoom(roomCode);
-    navigate("/create-room");
   };
 
   useEffect(() => {
@@ -29,7 +34,9 @@ function HomePage({ setRoom, setNickname }) {
         <p className="home-page__span">{charLimit}</p>
       </div>
       <input
-        className="home-page__input"
+        className={
+          "home-page__input " + (errorState ? "home-page__input-error" : "")
+        }
         id="nickname"
         type="text"
         placeholder="ENTER YOUR NAME"
@@ -42,7 +49,7 @@ function HomePage({ setRoom, setNickname }) {
       <button onClick={makeRoomCode}>CREATE ROOM</button>
       <button
         onClick={() => {
-          navigate("/join-room");
+          nickname ? navigate("/join-room") : setErrorState(true);
         }}
       >
         JOIN ROOM

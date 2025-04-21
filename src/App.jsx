@@ -22,7 +22,13 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={<HomePage setRoom={setRoom} setNickname={setNickname} />}
+          element={
+            <HomePage
+              setRoom={setRoom}
+              nickname={nickname}
+              setNickname={setNickname}
+            />
+          }
         />
         <Route
           path="/create-room"

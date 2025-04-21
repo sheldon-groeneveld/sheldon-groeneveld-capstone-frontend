@@ -11,15 +11,24 @@ function GamePage({ room, nickname }) {
   });
   const [answers, setAnswers] = useState([]);
   const [vote, setVote] = useState();
+  const [errorState, setErrorState] = useState(false);
 
   function handleSubmit() {
-    socket.emit("send_answer", { room, payload });
-    setGamePhase(1);
+    if (payload.answer) {
+      socket.emit("send_answer", { room, payload });
+      setGamePhase(1);
+    } else {
+      setErrorState(true);
+    }
   }
 
   function handleConfirmVote() {
-    socket.emit("send_vote", { room, nickname, vote });
-    setGamePhase(1);
+    if (vote) {
+      socket.emit("send_vote", { room, nickname, vote });
+      setGamePhase(1);
+    } else {
+      setErrorState(true);
+    }
   }
 
   function handleReset() {
@@ -46,12 +55,17 @@ function GamePage({ room, nickname }) {
     };
   }, [socket]);
 
+  useEffect(() => {
+    setErrorState(false);
+  }, [gamePhase]);
+
   let body;
   switch (gamePhase) {
     case 0: // submit answers phase
       body = (
         <div className="game-page__container">
           <input
+            className={errorState ? "error" : ""}
             type="text"
             onChange={(event) =>
               setPayload({ ...payload, answer: event.target.value })
@@ -84,7 +98,12 @@ function GamePage({ room, nickname }) {
               </li>
             ))}
           </ul>
-          <button onClick={handleConfirmVote}>Confirm</button>
+          <button
+            className={errorState ? "error" : ""}
+            onClick={handleConfirmVote}
+          >
+            Confirm
+          </button>
         </div>
       );
       break;
